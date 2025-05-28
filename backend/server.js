@@ -16,13 +16,14 @@ app.get('/', (req,res)=>{
 
 app.post("/api/transactions", async (req, res) => {
     try {
-        const { title, amount, category, user_id } = req.body;
-        if (!title || !amount || !user_id || !category) {
+        const { title, user_id, category,amount } = req.body;
+        if (!title || !user_id|| !category || amount ===undefined) {
             return res.status(400).json({ error: "All fields are required" });
         }
+
         const transaction = await sql`
             INSERT INTO transactions (user_id, title, amount, category)
-            VALUES (${title}, ${amount}, ${category}, ${user_id})
+             VALUES (${user_id}, ${title}, ${amount}, ${category})
             RETURNING *;
         `;
         console.log(req.body);
