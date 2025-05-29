@@ -13,7 +13,17 @@ app.get('/', (req,res)=>{
     res.send("Hello Anirban Here it is working fine")
 
 })
-
+app.get("/api/transactions/:user_id",async(req,res)=>{
+    try{
+     const {userId} = req.params;
+  const transaction=  await sql `
+     SELECT * FROM transactions WHERE user_id = ${userId} ORDER BY created_at DESC;`
+     console.log(userId)
+     res.status(200).json(transaction)
+    }catch(error){
+        console.log("Error getting the transactions", error);
+    }
+})
 app.post("/api/transactions", async (req, res) => {
     try {
         const { title, user_id, category,amount } = req.body;
