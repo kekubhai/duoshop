@@ -30,8 +30,11 @@ app.get("/api/transactions/:userId",async(req,res)=>{
 app.delete("/api/transactions/:id", async (req,res)=>{
     try{
       const {id}=req.params;
+      if(isNaN(parseInt(id))){
+        return res.status(400).json({ error: "Invalid transaction ID" });
+      }
       const result =await sql `DELETE FROM transactions WHERE id = ${id} RETURNING *;`
-      if(result.lengtyh===0){
+      if(result.length===0){
         return res.status(404).json({ error: "Transaction not found" });
       }
         res.status(200).json({ message: "Transaction deleted successfully", transaction: result[0] });
