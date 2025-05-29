@@ -44,6 +44,27 @@ app.delete("/api/transactions/:id", async (req,res)=>{
         res.status(500).json({ error: "Internal Server Error" });
     }
 })
+app.get("/api/transactions/summary/:userId",async (req,res)=>{
+    try{
+const {userId}=req.params;
+const balanceResult=await sql `
+SELECT COALESCE(SUM(amount),0) as balance FROM transactions WHERE user_id = ${userId}`
+const incomeResult =await sql `
+SELECT COALESCE(SUM(amount),0) as income FROM transactions WHERE user_id = ${userId} AND amount > 0;`
+const expenseResult=await sql `
+SELECT COALESCE(SUM(amount),0) as expense FROM transactions WHERE user_id = ${userId} AND amount < 0;` 
+
+//res.status(200).json(summary);
+res.status(200).json({
+    balanceResult: balanceResult[0].balance,
+    incomeResult: incomeResult[0].income,   
+    expenseResult: expenseResult[0].expense
+})
+    }catch(error){
+        console.log("Error getting transaction summary", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+})
 app.post("/api/transactions", async (req, res) => {
     try {
         const { title, user_id, category,amount } = req.body;
