@@ -1,15 +1,17 @@
 import express from 'express';
 import { configDotenv } from 'dotenv';
 import {sql} from './config/db.js'
+import rateLimit from './config/upstash.js';
 
 const app=express();
 configDotenv();
+app.use(rateLimit)
 app.use(express.json())
 //My simple middlesware 
 // app.use((req,res,next)=>{
 //     console.log("Hey we hit a request", req.method)
 //     next()
-// })
+// })               
 app.get('/', (req,res)=>{
     res.send("Hello Anirban Here it is working fine")
 
