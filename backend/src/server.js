@@ -6,7 +6,7 @@ import rateLimiter from './middleware/rateLimiter.js';
 const router=express.Router()
 const app=express();
 configDotenv();
-app.use(rateLimiter)
+//app.use(rateLimiter)
 app.use(express.json())
 
 
