@@ -4,7 +4,7 @@ import { Text, View } from 'react-native'
 import SignOutButton from '../../components/SignOutButton'
 
 
-export default function Page() {
+ function Page() {
   const { user } = useUser()
 
   return (
@@ -24,3 +24,4 @@ export default function Page() {
     </View>
   )
 }
+export default Page
