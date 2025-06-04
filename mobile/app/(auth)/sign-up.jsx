@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useSignUp } from '@clerk/clerk-expo'
+import { useState } from 'react'
 import { Link, useRouter } from 'expo-router'
-import styles from '../../assets/styles/auth.styles'
+import {styles} from '../../assets/styles/auth.styles'
+import Ionicons from '@expo/vector-icons/Ionicons'
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp()
   const router = useRouter()
@@ -66,9 +68,14 @@ export default function SignUpScreen() {
   if (true) {
     return (
       <>
-      <View style={{style:styles.verificationcontainer}}>
-        
+      <View style={styles.verificationContainer}>
+   <Ionicons name="alert-circle-outline" size={24} color="black" style={styles.expense} />
         <Text>Verify your email</Text>
+        {error ? (
+          <View>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        ) : null}
         <TextInput
           value={code}
           placeholder="Enter your verification code"
