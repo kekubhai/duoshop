@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { Link, useRouter } from 'expo-router'
 import {styles} from '../../assets/styles/auth.styles'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { COLORS } from '../../constants/Colors'
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp()
   const router = useRouter()
@@ -73,10 +74,15 @@ export default function SignUpScreen() {
         <Text>Verify your email</Text>
         {error ? (
           <View>
+            <Ionicons name='alert-circle-outline'size={20} color={COLORS.expense} />
+            <Text style={ styles.errorText}>  {error}</Text>
+            <TouchableOpacity onPress={() => setError("")}>
+              <Text style={{ color: COLORS.primary }}>Dismiss</Text>
+            </TouchableOpacity>
             <Text style={styles.errorText}>{error}</Text>
           </View>
         ) : null}
-        <TextInput
+        <TextInput  
           value={code}
           placeholder="Enter your verification code"
           onChangeText={(code) => setCode(code)}
