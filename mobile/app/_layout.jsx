@@ -7,7 +7,7 @@ export default function RootLayout() {
   return (
     <ClerkProvider tokenCache={tokenCache}>
       <SafeScreen>
-        <Stack initialRouteName="(root)">
+        <Stack initialRouteName="(root)" options={{headerShown:false}}>
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(root)" options={{ headerShown: false }} />
         </Stack>
