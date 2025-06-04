@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useSignUp } from '@clerk/clerk-expo'
+import { Avatar } from 'react-native-elements'
 import { useState } from 'react'
 import { Link, useRouter } from 'expo-router'
 import {styles} from '../../assets/styles/auth.styles'
@@ -66,7 +67,7 @@ export default function SignUpScreen() {
     }
   }
 
-  if (true) {
+  if (pendingVerification) {
     return (
       <>
       <View style={styles.verificationContainer}>
@@ -82,13 +83,15 @@ export default function SignUpScreen() {
             <Text style={styles.errorText}>{error}</Text>
           </View>
         ) : null}
-        <TextInput  
+        <TextInput
+          style={[styles.verificationInput, error && styles.errorInput]}
           value={code}
           placeholder="Enter your verification code"
           onChangeText={(code) => setCode(code)}
           />
-        <TouchableOpacity onPress={onVerifyPress}>
-          <Text>Verify</Text>
+        <TouchableOpacity onPress={onVerifyPress} style={styles.button}>
+          <Text style={styles.buttonText
+          }>Verify</Text>
         </TouchableOpacity>
           </View>
       </>
@@ -96,8 +99,17 @@ export default function SignUpScreen() {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
+      <Ionicons name="alert-circle-outline" size={24} color="black" style={styles.expense} />
       <>
+      <Avatar
+  size="medium"
+  overlayContainerStyle={{backgroundColor: 'blue'}}
+  icon={{name: 'meetup', color: 'red', type: 'font-awesome'}}
+  onPress={() => console.log("Works!")}
+  activeOpacity={0.7}
+  containerStyle={{flex: 3, marginTop: 100}}
+/>
         <Text>Sign up</Text>
         <TextInput
           autoCapitalize="none"
