@@ -2,14 +2,16 @@ import { useSignIn } from '@clerk/clerk-expo'
 import { Link, useRouter } from 'expo-router'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-
+import { Image } from 'react-native'
+import { useState } from 'react'
+import {styles} from '../../assets/styles/auth.styles' 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn()
   const router = useRouter()
 
-  const [emailAddress, setEmailAddress] = React.useState('')
-  const [password, setPassword] = React.useState('')
-
+  const [emailAddress, setEmailAddress] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState("")
   // Handle the submission of the sign-in form
   const onSignInPress = async () => {
     if (!isLoaded) return
@@ -39,26 +41,36 @@ export default function Page() {
   }
 
   return (
-    <View>
-      <Text>Sign in</Text>
+    <View style={styles.container}>
+      <Image
+        source={require('../../assets/images/signinduoshop.png')}
+        style={styles.illustration}
+        styles={{ width: 200, height: 200 }}
+        resizeMode="contain"
+      />
+      <Text style={styles.title}>Sign in</Text>
       <TextInput
+        style={styles.input}
         autoCapitalize="none"
+        autoComplete="email"
         value={emailAddress}
         placeholder="Enter email"
         onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
       />
       <TextInput
+        style={styles.input}
         value={password}
         placeholder="Enter password"
         secureTextEntry={true}
         onChangeText={(password) => setPassword(password)}
       />
-      <TouchableOpacity onPress={onSignInPress}>
-        <Text>Continue</Text>
+      <TouchableOpacity onPress={onSignInPress} style={styles.button}>
+        <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
       <View style={{ display: 'flex', flexDirection: 'row', gap: 3 }}>
+        <Text style={styles.footerText}> Don't have an account?</Text>
         <Link href="/sign-up">
-          <Text>Sign up</Text>
+          <Text style={styles.linkText}>Sign up</Text>
         </Link>
       </View>
     </View>

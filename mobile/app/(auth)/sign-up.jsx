@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Text, TextInput, TouchableOpacity, View,KeyboardAvoidingView } from 'react-native'
 import { useSignUp } from '@clerk/clerk-expo'
 import { Avatar } from 'react-native-elements'
 import { useState } from 'react'
@@ -103,34 +103,38 @@ export default function SignUpScreen() {
       <Ionicons name="alert-circle-outline" size={24} color="black" style={styles.expense} />
       <>
       <Avatar
-  size="medium"
+  rounded
+  size={100}
   overlayContainerStyle={{backgroundColor: 'blue'}}
   icon={{name: 'meetup', color: 'red', type: 'font-awesome'}}
   onPress={() => console.log("Works!")}
   activeOpacity={0.7}
-  containerStyle={{flex: 3, marginTop: 100}}
+  containerStyle={{ marginTop: 10, marginBottom:20}}
 />
-        <Text>Sign up</Text>
+        <Text style={{fontSize:200}}>Create Account </Text>
         <TextInput
+        style={styles.input && styles.errorInput}
           autoCapitalize="none"
           value={emailAddress}
           placeholder="Enter email"
           onChangeText={(email) => setEmailAddress(email)}
         />
         <TextInput
+           style={styles.input && styles.errorInput}
           value={password}
+          
           placeholder="Enter password"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
         />
-        <TouchableOpacity onPress={onSignUpPress}>
-          <Text>Continue</Text>
+        <TouchableOpacity onPress={onSignUpPress} style={styles.button}>
+          <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
         <View style={{ display: 'flex', flexDirection: 'row', gap: 3 }}>
           <Text>Already have an account?</Text>
-          <Link href="/sign-in">
-            <Text>Sign in</Text>
-          </Link>
+          <TouchableOpacity onPress={()=>router.back()} style={styles.link}>
+            <Text style={{ color: COLORS.primary, fontSize: 16 }}>Sign in</Text>
+          </TouchableOpacity>
         </View>
       </>
     </View>
