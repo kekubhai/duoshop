@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react"
-import axios from "axios";
+
 import { Alert } from "react-native";
-import { Alert } from "react-native";
-const API_URL= process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+
+const API_URL=  "http://localhost:5001/api"
 export const useTransactions=(userId)=>{
     const [transactions,setTransactions]=useState([])
     const [summary,setSummary]=useState({
@@ -32,7 +32,7 @@ export const useTransactions=(userId)=>{
     }, [userId])
  const getTransactionssummary=useCallback(async()=>{
 try {
-    const response=await axios(`${API_URL}/transactions/summary/${userId}`);
+    const response=await fetch(`${API_URL}/transactions/summary/${userId}`);
     const data=await response.data;
     setSummary(data);
 }catch(error){
@@ -54,7 +54,8 @@ const loadData=useCallback(async()=>{
     }
 }, [getfetchTransactions, getTransactionssummary])
 
-const deleteTransactions=useCallback(async ()=>{
+const deleteTransactions=useCallback(async (id)=>{
+    if(!id)return;
     try {
         const response =await fetch (`${API_URL}/transactions/${id}`, {method:"DELETE"})
         if(!response.ok){
@@ -67,7 +68,7 @@ const deleteTransactions=useCallback(async ()=>{
             console.error("Error deleting transactions:", error);
             Alert.alert("Error", "Failed to delete transactions. Please try again later."); 
         }
-    }, [id])
+    }, )
     return {
         transactions,
         summary,
