@@ -16,7 +16,7 @@ import { useEffect } from 'react'
  }, [loadData])
  console.log("transactions:", transactions)
   console.log("summary:", summary)
-  console.log("userId:",user.id)
+  console.log("userId:", user.id)
 
   return (
     <View style={{ padding: 20 }}>

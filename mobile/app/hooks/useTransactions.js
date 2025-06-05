@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 
 import { Alert } from "react-native";
 
-const API_URL=  "http://localhost:5001/api"
+const API_URL=  "https://duoshop.onrender.com/api"
 export const useTransactions=(userId)=>{
     const [transactions,setTransactions]=useState([])
     const [summary,setSummary]=useState({
@@ -10,7 +10,7 @@ export const useTransactions=(userId)=>{
         income:0,
         expenses:0,
     });
-    const [loading,setIsLoading]=useState(null)
+    const [loading,setIsLoading]=useState(true)
     // const fetchTransactions=async()=>{
     //     try{
     //         const response=await fetch (`${API_URL}/transactions/${userId}`);
@@ -33,7 +33,7 @@ export const useTransactions=(userId)=>{
  const getTransactionssummary=useCallback(async()=>{
 try {
     const response=await fetch(`${API_URL}/transactions/summary/${userId}`);
-    const data=await response.data;
+    const data=await response.json();
     setSummary(data);
 }catch(error){
     console.error("Error fetching transaction summary:", error);
@@ -41,7 +41,7 @@ try {
 }, [userId])
 const loadData=useCallback(async()=>{
     if(!userId) return;
-    isLoading(true);
+    setIsLoading(true);
     try{
         await Promise.all([
             getfetchTransactions(),
