@@ -8,18 +8,22 @@ import SignOutButton from '../../components/SignOutButton'
   const { user } = useUser()
 
   return (
-    <View>
+    <View style={{ padding: 20 }}>
       <SignedIn>
-        <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
-       <SignOutButton/>
+        <Text style={{ fontSize: 18, marginBottom: 10 }}>
+          Welcome, {user?.emailAddresses[0]?.emailAddress}!
+        </Text>
+        <SignOutButton />
       </SignedIn>
       <SignedOut>
-        <Link href="/(auth)/sign-in">
-          <Text>Sign in</Text>
-        </Link>
-        <Link href="/(auth)/sign-up">
-          <Text>Sign up</Text>
-        </Link>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+          <Link href="/(auth)/sign-in">
+            <Text style={{ color: 'blue' }}>Sign In</Text>
+          </Link>
+          <Link href="/(auth)/sign-up">
+            <Text style={{ color: 'green' }}>Sign Up</Text>
+          </Link>
+        </View>
       </SignedOut>
     </View>
   )

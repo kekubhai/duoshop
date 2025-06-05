@@ -5,6 +5,7 @@ import React from 'react'
 import { Image } from 'react-native'
 import { useState } from 'react'
 import {styles} from '../../assets/styles/auth.styles' 
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn()
   const router = useRouter()
@@ -34,21 +35,30 @@ export default function Page() {
         console.error(JSON.stringify(signInAttempt, null, 2))
       }
     } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
+    if(err.errors?.[0].code==="form_password_incorrect"){
+      setError("Incorrect email or password")
+    }else {
+      setError("An error occurred while signing in. Please try again later.")
+    }
       console.error(JSON.stringify(err, null, 2))
     }
   }
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require('../../assets/images/signinduoshop.png')}
-        style={styles.illustration}
-        styles={{ width: 200, height: 200 }}
-        resizeMode="contain"
-      />
-      <Text style={styles.title}>Sign in</Text>
+    <KeyboardAwareScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}
+    enableOnAndroid={true}
+    enableAutomaticScroll={true}
+    extraScrollHeight={100}>
+
+      <View style={styles.container}>
+        <Image
+          source={require('../../assets/images/signinduoshop.png')}
+          style={styles.illustration}
+          styles={{ width: 2, height: 20 }}
+          
+          resizeMode="contain"
+        />
+        <Text style={styles.title}>Sign in</Text>
       <TextInput
         style={styles.input}
         autoCapitalize="none"
@@ -56,14 +66,14 @@ export default function Page() {
         value={emailAddress}
         placeholder="Enter email"
         onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
-      />
+        />
       <TextInput
         style={styles.input}
         value={password}
         placeholder="Enter password"
         secureTextEntry={true}
         onChangeText={(password) => setPassword(password)}
-      />
+        />
       <TouchableOpacity onPress={onSignInPress} style={styles.button}>
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -74,5 +84,6 @@ export default function Page() {
         </Link>
       </View>
     </View>
+        </KeyboardAwareScrollView>
   )
 }
