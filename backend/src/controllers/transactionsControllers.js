@@ -1,9 +1,11 @@
+import {sql} from '../config/db.js';
 export async function getTransactionsbyUserId(req,res){
   try{
        const {userId} = req.params;
     const transaction=  await sql `
        SELECT * FROM transactions WHERE user_id = ${userId} ORDER BY created_at DESC;`
        console.log(userId)
+       console.log('internal server error')
        res.status(200).json(transaction)
       
       }catch(error){
@@ -58,7 +60,7 @@ SELECT COALESCE(SUM(amount),0) as income FROM transactions WHERE user_id = ${use
 const expenseResult=await sql `
 SELECT COALESCE(SUM(amount),0) as expense FROM transactions WHERE user_id = ${userId} AND amount < 0;` 
 
-//res.status(200).json(summary);
+res.status(200).json(summary.balance);
 res.status(200).json({
     balanceResult: balanceResult[0].balance,
     incomeResult: incomeResult[0].income,   
