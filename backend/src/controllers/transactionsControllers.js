@@ -60,9 +60,9 @@ SELECT COALESCE(SUM(amount),0) as income FROM transactions WHERE user_id = ${use
 const expenseResult=await sql `
 SELECT COALESCE(SUM(amount),0) as expense FROM transactions WHERE user_id = ${userId} AND amount < 0;` 
 res.status(200).json({
-    balanceResult: balanceResult[0].balance,
-    incomeResult: incomeResult[0].income,   
-    expenseResult: expenseResult[0].expense
+    balanceResult: Number(balanceResult[0].balance),
+    incomeResult: Number(incomeResult[0].income),
+    expenseResult: Number(expenseResult[0].expense)
 })
 console.log("balanceResult", balanceResult[0].balance);
 console.log("incomeResult", incomeResult[0].income);

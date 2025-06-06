@@ -52,7 +52,7 @@ import { Ionicons } from '@expo/vector-icons'
         <SignOutButton/>
       </View> 
         </View>
-      <BalanceCard summary={transactions}/>
+      <BalanceCard summary={summary}/>
       </View>
     </View>
   )
