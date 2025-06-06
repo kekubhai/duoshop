@@ -81,7 +81,7 @@ const [refreshing, setRefreshing] = useState(false)
     
     <FlatList
       ListEmptyComponent={<NoTransactionsFound />}
-      data={[]}
+      data={transactions}
       renderItem={({ item }) => {
         console.log("Rendering item:", item);
         return <TransactionsItem item={item} onDelete={handleDelete} />;

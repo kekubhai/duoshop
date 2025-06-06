@@ -3,10 +3,10 @@ import React from 'react'
 import {COLORS} from '../../constants/Colors'
 import {styles} from '../../assets/styles/create.styles'
 import { Ionicons } from '@expo/vector-icons'
-import API_URL from '../../constants/API'
+import {API_URL} from '../../constants/API'
 import {useUser} from '@clerk/clerk-expo'
 import { useState } from 'react'
-import { ActivityIndicatorBase } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 
 import { useRouter } from 'expo-router'
   const CATEGORIES=[
@@ -20,7 +20,7 @@ import { useRouter } from 'expo-router'
     ]
 const CreateTransaction = () => {
 
-    const user=useUser()
+    const {user}=useUser()
     const router = useRouter()
     const [title, setTitle] = useState('')
     const [amount, setAmount] = useState('')
@@ -54,8 +54,8 @@ const CreateTransaction = () => {
             body:JSON.stringify({
                 title,
                 amount:formattedAmount,
-                category:selectedcategory,
-                userId:user.id,
+                category:CATEGORIES.find(cat=>cat.id===selectedcategory)?.name || 'Other',
+                user_id:user.id,
                         })
            })
            if(!response.ok){
@@ -80,7 +80,7 @@ const CreateTransaction = () => {
                 <Ionicons name='arrow-back' size={24} color={COLORS.text} />
             </TouchableOpacity>
             <Text style={styles.headerTitle}> Create Transactions</Text>
-            <TouchableOpacity style={[styles.saveButtonContainer, isLoading && styles.saveButtonDisabled]} >
+            <TouchableOpacity style={[styles.saveButtonContainer, isLoading && styles.saveButtonDisabled]} onPress={handleCreateTransactions} disabled={isLoading}>
                 <Text style={styles.saveButton}>{isLoading ? "Saving ..." : "Save"}</Text>
                 {!isLoading && <Ionicons name='checkmark' size={24} color={COLORS.primary} />}
             </TouchableOpacity>
@@ -88,14 +88,37 @@ const CreateTransaction = () => {
         </View>
         <View style={styles.card}>
             <View style={styles.typeSelector}>
-                <TouchableOpacity style={[styles.typeButton, isExpense && styles.typeButtonSelected]} onPress={() => setIsExpense(true)}>
-                    <Ionicons name='arrow-down-circle-sharp' size={24} color={COLORS.expense} />
-                    <Text style={[styles.typeButtonText, isExpense && styles.typeButtonTextActive]}>Expense</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.typeButton, !isExpense && styles.typeButtonSelected]} onPress={() => setIsExpense(false)}>
-                    <Ionicons style={styles.typeIcon} name='add-circle-outline' size={24} color={COLORS.income} />
-                    <Text style={[styles.typeButtonText, isExpense && styles.typeButtonTextActive]}>Income</Text>
-                </TouchableOpacity>
+                <TouchableOpacity 
+  style={[
+    styles.typeButton, 
+    {backgroundColor: isExpense ? COLORS.expenseBackground : 'transparent'}
+  ]} 
+  onPress={() => setIsExpense(true)}
+>
+  <Ionicons name='arrow-down-circle-sharp' size={24} color={COLORS.expense} />
+  <Text style={[
+    styles.typeButtonText, 
+    {color: isExpense ? COLORS.white : COLORS.text}
+  ]}>
+    Expense
+  </Text>
+</TouchableOpacity>
+
+                <TouchableOpacity 
+  style={[
+    styles.typeButton, 
+    {backgroundColor: !isExpense ? COLORS.incomeBackground : 'transparent'}
+  ]} 
+  onPress={() => setIsExpense(false)}
+>
+  <Ionicons name='add-circle-outline' size={24} color={COLORS.income} />
+  <Text style={[
+    styles.typeButtonText, 
+    {color: !isExpense ? COLORS.white : COLORS.text}
+  ]}>
+    Income
+  </Text>
+</TouchableOpacity>
 <TouchableOpacity></TouchableOpacity>
 
             </View>
@@ -127,22 +150,28 @@ const CreateTransaction = () => {
             <TouchableOpacity
             key={category.id}
             style={[styles.categoryButton, selectedcategory === category.id && styles.categoryButtonActive]}
-
+            onPress={() => setCategory(category.id)}
 >
-<Ionicons name={category.icon} size={20} color={selectedcategory==category.name ?COLORS.white :COLORS.text}
-style={styles.categoryIcon} />
-<Text style={[styles.categoryButtonText, selectedcategory==category.name && styles.categoryButtonTextActive]}>{category.name}</Text>
+<Ionicons 
+    name={category.icon} 
+    size={20} 
+    color={selectedcategory === category.id ? COLORS.white : COLORS.text}
+    style={styles.categoryIcon} 
+  />
+<Text style={[styles.categoryButtonText, selectedcategory === category.id && styles.categoryButtonTextActive]}>{category.name}</Text>
 </TouchableOpacity>
 
         ))}
      </View>
         </View>
-      <Text>Create Transaction</Text>
-    
+
+{isLoading && (
     <View style={styles.loadingContainer}>
-        <ActivityIndicatorBase size="small" color={COLORS.primary} />
+        <ActivityIndicator size="small" color={COLORS.primary} />
     </View>
+)}
     </View>
+
   )
 }
 
