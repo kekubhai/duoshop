@@ -5,9 +5,9 @@ const API_URL=  "https://duoshop.onrender.com/api"
 export const useTransactions=(userId)=>{
     const [transactions,setTransactions]=useState([])
     const [summary,setSummary]=useState({
-        balance:0,
-        income:0,
-        expenses:0,
+        balanceResult:0,
+        incomeResult:0,
+        expenseResult:0,
     });
     const [loading,setIsLoading]=useState(true)
     // const fetchTransactions=async()=>{

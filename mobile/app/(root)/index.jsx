@@ -1,5 +1,6 @@
 import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
 import { Link } from 'expo-router'
+import { FlatList } from 'react-native'
 import { useState } from 'react'
 import BalanceCard from '../../components/BalanceCard'
 import { Text, TouchableOpacity, View } from 'react-native'
@@ -22,7 +23,7 @@ import { Ionicons } from '@expo/vector-icons'
       loadData()
 
  }, [loadData])
- console.log('Summary:', summary)
+ console.log('summary', summary)
  console.log('Transactions:', transactions)
  if (isLoading) return <PageLoader/>
 
@@ -53,6 +54,21 @@ import { Ionicons } from '@expo/vector-icons'
       </View> 
         </View>
       <BalanceCard summary={summary}/>
+      <View>
+        <Text style={{fontSize: 26, fontWeight: 'bold', color: '#200e0e'}}>Recent Transactions</Text>
+      </View>
+      <FlatList
+      style={styles.transactionsList}
+      contentContainerStyle={styles.transactionsListContent}
+      data={transactions}
+      renderItem={({ item }) => (
+        <View style={styles.transactionItem}>
+          <Text style={styles.transactionTitle}>{item.title}</Text>
+          <Text style={styles.transactionAmount}>₹{parseFloat(item.amount).toFixed(2)}</Text>
+        </View>
+      )}
+      keyExtractor={item => item.id}
+      />
       </View>
     </View>
   )
