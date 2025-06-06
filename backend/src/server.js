@@ -4,6 +4,7 @@ import {sql} from './config/db.js'
 import transactionsRoute from './routes/transactionsRoute.js';
 import rateLimiter from './middleware/rateLimiter.js';
 const router=express.Router()
+
 const app=express();
 configDotenv();
 //app.use(rateLimiter)
@@ -32,9 +33,10 @@ app.get("/", (req, res) => {
     res.send("Welcome to the Expense Tracker API");
 });
 app.use("/api/transactions", transactionsRoute)
-console.log(`Server is running at port ${process.env.PORT}`)
+
+console.log(`Server is running at port ${process.env.BASE_URL || 5001}`)
  initDB().then (()=>{
-    app.listen(process.env.PORT || 5001, ()=>{
-        console.log(`Server is running at port ${process.env.PORT || 5001}`)
+    app.listen(process.env.BASE || 5001, ()=>{
+        console.log(`Server is running at port ${process.env.BASE_URL|| 5001}`)
     }  )
  })

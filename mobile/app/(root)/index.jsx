@@ -24,7 +24,7 @@ import { useEffect } from 'react'
         <Text style={{ fontSize: 18, marginBottom: 10 }}>
           Welcome, {user?.emailAddresses[0]?.emailAddress}!
         </Text>
-        <Text>Income: {summary.amount}</Text>
+        <Text>Income: {transactions[0]?.amount}</Text>
         <SignOutButton />
       </SignedIn>
       <SignedOut>
