@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react"
-
+import API_URL from "../constants/API"
 import { Alert } from "react-native";
-const API_URL=  "https://duoshop.onrender.com/api"
 export const useTransactions=(userId)=>{
     const [transactions,setTransactions]=useState([])
     const [summary,setSummary]=useState({
