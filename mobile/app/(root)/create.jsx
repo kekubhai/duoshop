@@ -6,7 +6,8 @@ import { Ionicons } from '@expo/vector-icons'
 import API_URL from '../../constants/API'
 import {useUser} from '@clerk/clerk-expo'
 import { useState } from 'react'
-import { Picker } from '@react-native-picker/picker'
+import { ActivityIndicatorBase } from 'react-native'
+
 import { useRouter } from 'expo-router'
   const CATEGORIES=[
         { id: '1', name: 'Food' , icon: 'fast-food-outline'},
@@ -126,12 +127,21 @@ const CreateTransaction = () => {
             <TouchableOpacity
             key={category.id}
             style={[styles.categoryButton, selectedcategory === category.id && styles.categoryButtonActive]}
-            
-></TouchableOpacity>
+
+>
+<Ionicons name={category.icon} size={20} color={selectedcategory==category.name ?COLORS.white :COLORS.text}
+style={styles.categoryIcon} />
+<Text style={[styles.categoryButtonText, selectedcategory==category.name && styles.categoryButtonTextActive]}>{category.name}</Text>
+</TouchableOpacity>
+
         ))}
      </View>
         </View>
       <Text>Create Transaction</Text>
+    
+    <View style={styles.loadingContainer}>
+        <ActivityIndicatorBase size="small" color={COLORS.primary} />
+    </View>
     </View>
   )
 }
