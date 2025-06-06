@@ -14,6 +14,7 @@ import { Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { TransactionsItem } from '../../components/TransactionsItem'
 import NoTransactionsFound from '../../components/NotFoundTransaction'
+import { RefreshControl } from 'react-native'
 //import '../global.css'
  function Page() {
   const handleDelete =(id)=>
@@ -27,9 +28,14 @@ import NoTransactionsFound from '../../components/NotFoundTransaction'
 
   }
   const { user } = useUser()
-
+const [refreshing, setRefreshing] = useState(false)
   const [isLoading,setisLoading]=useState(false)
   const router=useRouter();
+  const onRefresh = async () => {
+    setRefreshing(true)
+    await loadData()
+    setRefreshing(false)
+  }
  const { transactions, summary, loading, loadData, deleteTransactions } = useTransactions(user.id)
  useEffect(()=>{
   
@@ -38,7 +44,7 @@ import NoTransactionsFound from '../../components/NotFoundTransaction'
  }, [loadData])
  console.log('summary', summary)
  console.log('Transactions:', transactions)
- if (isLoading) return <PageLoader/>
+ if (isLoading && refreshing) return <PageLoader/>
 
   return (
     <View style={styles.container}>
@@ -72,7 +78,7 @@ import NoTransactionsFound from '../../components/NotFoundTransaction'
       </View>
       {transactions && transactions.length > 0 ? (
   <>
-    <Text>Found {transactions.length} transactions</Text>
+    
     <FlatList
       ListEmptyComponent={<NoTransactionsFound />}
       data={[]}
@@ -82,6 +88,7 @@ import NoTransactionsFound from '../../components/NotFoundTransaction'
       }}
       keyExtractor={item => item.id.toString()}
       showsVerticalScrollIndicator={false}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     />
   </>
 ) : (
