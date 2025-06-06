@@ -12,9 +12,22 @@ import { styles } from '../../assets/styles/home.styles'
 import { useRouter } from 'expo-router'
 import { Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { TransactionsItem } from '../../components/TransactionsItem'
+import NoTransactionsFound from '../../components/NotFoundTransaction'
 //import '../global.css'
  function Page() {
+  const handleDelete =(id)=>
+  {
+    Alert.alert ('Delete Transaction',
+    'Are you sure you want to delete this transaction?',
+  [
+    {text:"Cancel", style:'cancel'},
+    {text:"Delete", style:'destructive',onPress:()=>deleteTransactions(id)}
+  ])
+
+  }
   const { user } = useUser()
+
   const [isLoading,setisLoading]=useState(false)
   const router=useRouter();
  const { transactions, summary, loading, loadData, deleteTransactions } = useTransactions(user.id)
@@ -57,18 +70,23 @@ import { Ionicons } from '@expo/vector-icons'
       <View>
         <Text style={{fontSize: 26, fontWeight: 'bold', color: '#200e0e'}}>Recent Transactions</Text>
       </View>
-      <FlatList
-      style={styles.transactionsList}
-      contentContainerStyle={styles.transactionsListContent}
-      data={transactions}
-      renderItem={({ item }) => (
-        <View style={styles.transactionItem}>
-          <Text style={styles.transactionTitle}>{item.title}</Text>
-          <Text style={styles.transactionAmount}>₹{parseFloat(item.amount).toFixed(2)}</Text>
-        </View>
-      )}
-      keyExtractor={item => item.id}
-      />
+      {transactions && transactions.length > 0 ? (
+  <>
+    <Text>Found {transactions.length} transactions</Text>
+    <FlatList
+      ListEmptyComponent={<NoTransactionsFound />}
+      data={[]}
+      renderItem={({ item }) => {
+        console.log("Rendering item:", item);
+        return <TransactionsItem item={item} onDelete={handleDelete} />;
+      }}
+      keyExtractor={item => item.id.toString()}
+      showsVerticalScrollIndicator={false}
+    />
+  </>
+) : (
+  <Text>No transactions available</Text>
+)}
       </View>
     </View>
   )
