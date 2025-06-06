@@ -1,6 +1,7 @@
 import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
 import { Link } from 'expo-router'
 import { useState } from 'react'
+import BalanceCard from '../../components/BalanceCard'
 import { Text, TouchableOpacity, View } from 'react-native'
 import SignOutButton from '../../components/SignOutButton'
 import { useTransactions } from '../hooks/useTransactions'
@@ -21,6 +22,8 @@ import { Ionicons } from '@expo/vector-icons'
       loadData()
 
  }, [loadData])
+ console.log('Summary:', summary)
+ console.log('Transactions:', transactions)
  if (isLoading) return <PageLoader/>
 
   return (
@@ -43,12 +46,13 @@ import { Ionicons } from '@expo/vector-icons'
         </View>  
          <View style={styles.headerRight}>
         <TouchableOpacity style={styles.addButton} onPress={()=>router.push('/create')}>
-          <Ionicons name="add" size={24} color="white" />
+          <Ionicons name="add-circle-sharp" size={24} color="white" />
           <Text style={styles.addButtonText}>Add </Text>
         </TouchableOpacity>
         <SignOutButton/>
       </View> 
         </View>
+      <BalanceCard summary={summary}/>
       </View>
     </View>
   )

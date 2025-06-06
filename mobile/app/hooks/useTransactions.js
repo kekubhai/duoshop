@@ -30,45 +30,79 @@ export const useTransactions=(userId)=>{
             console.error("Error fetching transactions:", error);
         }
     }, [userId])
- const getTransactionssummary=useCallback(async()=>{
-try {
-    const response=await fetch(`${API_URL}/transactions/summary/${userId}`);
-    const data=await response.json();
-    setSummary(data);
-}catch(error){
-    console.error("Error fetching transaction summary:", error);
-}
-}, [userId])
-const loadData=useCallback(async()=>{
-    if(!userId) return;
-    setIsLoading(true);
-    try{
-        await Promise.all([
-            getfetchTransactions(),
-            getTransactionssummary()
-        ]);
-    }catch(error){
-        console.error("Error loading data:", error);
-    }finally{
-        setIsLoading(false);
+ const getTransactionssummary = useCallback(async() => {
+  try {
+    // First try to get from API
+    const response = await fetch(`${API_URL}/transactions/summary/${userId}`);
+    const data = await response.json();
+    
+    // Check if we got valid data, otherwise calculate locally
+    if (!data || (data.balance === 0 && data.income === 0 && data.expenses === 0)) {
+      calculateSummaryFromTransactions();
+    } else {
+      setSummary(data);
     }
-}, [getfetchTransactions, getTransactionssummary])
+  } catch(error) {
+    console.error("Error fetching transaction summary:", error);
+    // Fallback to calculating from transactions
+    calculateSummaryFromTransactions();
+  }
+}, [userId]);
 
-const deleteTransactions=useCallback(async (id)=>{
-    if(!id)return;
-    try {
-        const response =await fetch (`${API_URL}/transactions/${id}`, {method:"DELETE"})
-        if(!response.ok){
-            throw new Error("Failed to delete transactions ")
+// Add this helper function to calculate summary from transactions
+const calculateSummaryFromTransactions = useCallback(() => {
+  if (!transactions.length) return;
+  
+  const income = transactions
+    .filter(t => Number(t.amount) > 0)
+    .reduce((acc, t) => acc + Number(t.amount), 0);
+    
+  const expenses = transactions
+    .filter(t => Number(t.amount) < 0)
+    .reduce((acc, t) => acc + Number(t.amount), 0);
+    
+  setSummary({
+    income,
+    expenses,
+    balance: income + expenses
+  });
+}, [transactions]);
 
+    const loadData=useCallback(async()=>{
+        if(!userId) return;
+        setIsLoading(true);
+        try{
+            await Promise.all([
+                getfetchTransactions(),
+                getTransactionssummary()
+            ]);
+        }catch(error){
+            console.error("Error loading data:", error);
+        }finally{
+            setIsLoading(false);
         }
+    }, [getfetchTransactions, getTransactionssummary])
 
-        }
-        catch(error){
-            console.error("Error deleting transactions:", error);
-            Alert.alert("Error", "Failed to delete transactions. Please try again later."); 
-        }
-    }, )
+    const deleteTransactions = useCallback(async (id) => {
+  if(!id) return;
+  try {
+    const response = await fetch(`${API_URL}/transactions/${id}`, {method:"DELETE"})
+    if(!response.ok){
+      throw new Error("Failed to delete transaction")
+    }
+    
+    // Update local state after successful deletion
+    setTransactions(prev => prev.filter(t => t.id !== id));
+    
+    // Recalculate summary
+    calculateSummaryFromTransactions();
+    
+  } catch(error) {
+    console.error("Error deleting transaction:", error);
+    Alert.alert("Error", "Failed to delete transaction. Please try again later."); 
+  }
+}, [calculateSummaryFromTransactions]);
+
     return {
         transactions,
         summary,
