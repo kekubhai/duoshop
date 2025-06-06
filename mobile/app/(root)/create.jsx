@@ -1,9 +1,12 @@
-import { View, Text, Alert } from 'react-native'
+import { View, Text, Alert, TouchableOpacity, TextInput } from 'react-native'
 import React from 'react'
+import {COLORS} from '../../constants/Colors'
 import {styles} from '../../assets/styles/create.styles'
 import { Ionicons } from '@expo/vector-icons'
-import API_URL from '../../constants/api'
+import API_URL from '../../constants/API'
 import {useUser} from '@clerk/clerk-expo'
+import { useState } from 'react'
+import { Picker } from '@react-native-picker/picker'
 import { useRouter } from 'expo-router'
   const CATEGORIES=[
         { id: '1', name: 'Food' , icon: 'fast-food-outline'},
@@ -71,7 +74,63 @@ const CreateTransaction = () => {
     }
   return (
     <View style={styles.container}>
-        <View style={styles.saveButtonDisabled}></View>
+        <View style={styles.header}>
+            <TouchableOpacity style={styles.backButton} onPress={()=>router.back()}>
+                <Ionicons name='arrow-back' size={24} color={COLORS.text} />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}> Create Transactions</Text>
+            <TouchableOpacity style={[styles.saveButtonContainer, isLoading && styles.saveButtonDisabled]} >
+                <Text style={styles.saveButton}>{isLoading ? "Saving ..." : "Save"}</Text>
+                {!isLoading && <Ionicons name='checkmark' size={24} color={COLORS.primary} />}
+            </TouchableOpacity>
+
+        </View>
+        <View style={styles.card}>
+            <View style={styles.typeSelector}>
+                <TouchableOpacity style={[styles.typeButton, isExpense && styles.typeButtonSelected]} onPress={() => setIsExpense(true)}>
+                    <Ionicons name='arrow-down-circle-sharp' size={24} color={COLORS.expense} />
+                    <Text style={[styles.typeButtonText, isExpense && styles.typeButtonTextActive]}>Expense</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.typeButton, !isExpense && styles.typeButtonSelected]} onPress={() => setIsExpense(false)}>
+                    <Ionicons style={styles.typeIcon} name='add-circle-outline' size={24} color={COLORS.income} />
+                    <Text style={[styles.typeButtonText, isExpense && styles.typeButtonTextActive]}>Income</Text>
+                </TouchableOpacity>
+<TouchableOpacity></TouchableOpacity>
+
+            </View>
+
+           <View style={styles.amountContainer}>
+            <Text style={styles.currencySymbol}>₹</Text>
+            <TextInput 
+            style={styles.amountInput}
+            value={amount}
+            onChangeText={setAmount}
+            keyboardType="numeric"
+            placeholder="0.00"
+            />
+        </View>
+     <View style={styles.inputContainer}>
+        <Ionicons name='create-outline' size={24} color={COLORS.text} style={styles.inputIcon} />
+        <TextInput
+       style={styles.input} 
+       placeholder='Title'
+         value={title}
+         placeholderTextColor={COLORS.placeholder}
+
+            onChangeText={setTitle}
+        />
+     </View>
+
+     <View style={styles.categoryGrid}>
+        {CATEGORIES.map(category=>(
+            <TouchableOpacity
+            key={category.id}
+            style={[styles.categoryButton, selectedcategory === category.id && styles.categoryButtonActive]}
+            
+></TouchableOpacity>
+        ))}
+     </View>
+        </View>
       <Text>Create Transaction</Text>
     </View>
   )
