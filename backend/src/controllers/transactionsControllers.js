@@ -50,7 +50,7 @@ export async function deleteTransaction(){
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
-export async function getTransactionSummary(){async (req,res)=>{
+export async function getTransactionSummary (req,res){
     try{
 const {userId}=req.params;
 const balanceResult=await sql `
@@ -59,20 +59,21 @@ const incomeResult =await sql `
 SELECT COALESCE(SUM(amount),0) as income FROM transactions WHERE user_id = ${userId} AND amount > 0;`
 const expenseResult=await sql `
 SELECT COALESCE(SUM(amount),0) as expense FROM transactions WHERE user_id = ${userId} AND amount < 0;` 
-
-res.status(200).json(summary.balance);
 res.status(200).json({
     balanceResult: balanceResult[0].balance,
     incomeResult: incomeResult[0].income,   
     expenseResult: expenseResult[0].expense
 })
+console.log("balanceResult", balanceResult[0].balance);
+console.log("incomeResult", incomeResult[0].income);
+console.log("expenseResult", expenseResult[0].expense);
     }catch(error){
         console.log("Error getting transaction summary", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
-}
+
 export default {
     getTransactionsbyUserId,
     createTransaction,

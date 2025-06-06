@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react"
 
 import { Alert } from "react-native";
-
 const API_URL=  "https://duoshop.onrender.com/api"
 export const useTransactions=(userId)=>{
     const [transactions,setTransactions]=useState([])
@@ -30,9 +29,9 @@ export const useTransactions=(userId)=>{
             console.error("Error fetching transactions:", error);
         }
     }, [userId])
- const getTransactionssummary = useCallback(async() => {
+ const getTransactionsSummary = useCallback(async() => {
   try {
-    // First try to get from API
+   
     const response = await fetch(`${API_URL}/transactions/summary/${userId}`);
     const data = await response.json();
     
@@ -74,14 +73,14 @@ const calculateSummaryFromTransactions = useCallback(() => {
         try{
             await Promise.all([
                 getfetchTransactions(),
-                getTransactionssummary()
+                getTransactionsSummary()
             ]);
         }catch(error){
             console.error("Error loading data:", error);
         }finally{
             setIsLoading(false);
         }
-    }, [getfetchTransactions, getTransactionssummary])
+    }, [getfetchTransactions, getTransactionsSummary])
 
     const deleteTransactions = useCallback(async (id) => {
   if(!id) return;

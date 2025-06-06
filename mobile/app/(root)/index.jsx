@@ -29,7 +29,7 @@ import { Ionicons } from '@expo/vector-icons'
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <View style={styles.header}>
+        <View  style={styles.header}>
           <View style={styles.headerLeft}>
             <Image
               style={{ width: 50, height: 50, borderRadius: 25 }}
@@ -52,7 +52,7 @@ import { Ionicons } from '@expo/vector-icons'
         <SignOutButton/>
       </View> 
         </View>
-      <BalanceCard summary={summary}/>
+      <BalanceCard summary={transactions}/>
       </View>
     </View>
   )
