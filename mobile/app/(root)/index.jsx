@@ -1,42 +1,55 @@
 import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
 import { Link } from 'expo-router'
-import { Text, View } from 'react-native'
+import { useState } from 'react'
+import { Text, TouchableOpacity, View } from 'react-native'
 import SignOutButton from '../../components/SignOutButton'
 import { useTransactions } from '../hooks/useTransactions'
 import { useEffect } from 'react'
-
-
+import PageLoader from '../../components/PageLoader'
+import { styles } from '../../assets/styles/home.styles'
+import { useRouter } from 'expo-router'
+import { Image } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+//import '../global.css'
  function Page() {
   const { user } = useUser()
+  const [isLoading,setisLoading]=useState(false)
+  const router=useRouter();
  const { transactions, summary, loading, loadData, deleteTransactions } = useTransactions(user.id)
  useEffect(()=>{
   
       loadData()
 
  }, [loadData])
- console.log("transactions:", transactions)
-  console.log("summary:", summary)
-  console.log("userId:", user.id)
+ if (isLoading) return <PageLoader/>
 
   return (
-    <View style={{ padding: 20 }}>
-      <SignedIn>
-        <Text style={{ fontSize: 18, marginBottom: 10 }}>
-          Welcome, {user?.emailAddresses[0]?.emailAddress}!
-        </Text>
-        <Text>Income: {transactions[0]?.amount}</Text>
-        <SignOutButton />
-      </SignedIn>
-      <SignedOut>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-          <Link href="/(auth)/sign-in">
-            <Text style={{ color: 'blue' }}>Sign In</Text>
-          </Link>
-          <Link href="/(auth)/sign-up">
-            <Text style={{ color: 'green' }}>Sign Up</Text>
-          </Link>
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <Image
+              style={{ width: 50, height: 50, borderRadius: 25 }}
+              source={require('../../assets/images/logo1.png')}
+            />
+            <View style={styles.welcomeContainer}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#200e0e', paddingLeft: 10 }}>
+                Namaste,
+              </Text>
+            <Text style={{fontSize:20, fontStyle:'italic', paddingLeft: 10, color: '#200e0e' }}>
+              </Text>
+              <Text style={styles.usernameText}>{user.emailAddresses[0]?.emailAddress.split('@')[0]}</Text>
         </View>
-      </SignedOut>
+        </View>  
+         <View style={styles.headerRight}>
+        <TouchableOpacity style={styles.addButton} onPress={()=>router.push('/create')}>
+          <Ionicons name="add" size={24} color="white" />
+          <Text style={styles.addButtonText}>Add </Text>
+        </TouchableOpacity>
+        <SignOutButton/>
+      </View> 
+        </View>
+      </View>
     </View>
   )
 }
