@@ -11,7 +11,9 @@ const NoTransactionsFound = () => {
       <Text style={styles.subtitle}>You don't have any transactions yet.</Text>
 
       <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText} onPress={() => router.push('/create')}>Add Transaction</Text>
+        <Text style={styles.buttonText} onPress={() => router.push('/create')}>
+          Add Transaction
+        </Text>
       </TouchableOpacity>
     </View>
   );

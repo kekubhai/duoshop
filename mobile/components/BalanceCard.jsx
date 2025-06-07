@@ -1,8 +1,8 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { COLORS } from "@/constants/Colors";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { COLORS } from '@/constants/Colors';
 
-const BalanceCard = ({summary = {}}) => {
+const BalanceCard = ({ summary = {} }) => {
   // Provide default values to prevent NaN
   const balance = summary?.balanceResult || 0;
   const income = summary?.incomeResult || 0;
@@ -16,14 +16,14 @@ const BalanceCard = ({summary = {}}) => {
       <View style={styles.balanceStats}>
         <View style={[styles.balanceStatItem, styles.statDivider]}>
           <Text style={styles.balanceStatLabel}>Income</Text>
-          <Text style={[styles.balanceStatAmount, { color:COLORS.income }]}>
+          <Text style={[styles.balanceStatAmount, { color: COLORS.income }]}>
             ₹{parseFloat(income).toFixed(2)}
           </Text>
         </View>
-        
+
         <View style={styles.balanceStatItem}>
           <Text style={styles.balanceStatLabel}>Expenses</Text>
-          <Text style={[styles.balanceStatAmount, { color:COLORS.expense }]}>
+          <Text style={[styles.balanceStatAmount, { color: COLORS.expense }]}>
             ₹{parseFloat(expenses).toFixed(2)}
           </Text>
         </View>
@@ -54,17 +54,17 @@ const styles = StyleSheet.create({
   },
   balanceAmount: {
     fontSize: 32,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: COLORS.text,
     marginBottom: 20,
   },
   balanceStats: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   balanceStatItem: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
   },
   statDivider: {
     borderRightWidth: 1,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   balanceStatAmount: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
   },
 });
 

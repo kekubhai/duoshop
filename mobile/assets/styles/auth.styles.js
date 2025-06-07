@@ -1,24 +1,24 @@
-import { StyleSheet } from "react-native";
-import Colors, { COLORS } from "../../constants/Colors"
+import { StyleSheet } from 'react-native';
+import Colors, { COLORS } from '../../constants/Colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
     padding: 20,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   illustration: {
-    width: "100%",
+    width: '100%',
     height: 310,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   title: {
     fontSize: 32,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: COLORS.text,
     marginVertical: 15,
-    textAlign: "center",
+    textAlign: 'center',
   },
   input: {
     backgroundColor: COLORS.white,
@@ -37,19 +37,19 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     borderRadius: 12,
     padding: 16,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 10,
     marginBottom: 20,
   },
   buttonText: {
     color: COLORS.white,
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   footerContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: 8,
   },
   footerText: {
@@ -59,21 +59,21 @@ export const styles = StyleSheet.create({
   linkText: {
     color: COLORS.primary,
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   verificationContainer: {
     flex: 1,
     backgroundColor: COLORS.background,
     padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   verificationTitle: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: COLORS.text,
     marginBottom: 20,
-    textAlign: "center",
+    textAlign: 'center',
   },
   verificationInput: {
     backgroundColor: COLORS.white,
@@ -84,22 +84,22 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.border,
     fontSize: 16,
     color: COLORS.text,
-    width: "100%",
-    textAlign: "center",
+    width: '100%',
+    textAlign: 'center',
     letterSpacing: 2,
   },
 
   // 🔴 Error styles
   errorBox: {
-    backgroundColor: "#FFE5E5",
+    backgroundColor: '#FFE5E5',
     padding: 12,
     borderRadius: 8,
     borderLeftWidth: 4,
     borderLeftColor: COLORS.expense,
     marginBottom: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
   },
   errorText: {
     color: COLORS.text,
