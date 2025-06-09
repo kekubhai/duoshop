@@ -86,12 +86,16 @@ def analyze_spending_patterns(df):
     expenses['amount'] = expenses['amount'].abs()
     
     category_totals=expense.groundby('category')['amount'].agg(['sum', 'mean', 'count']).reset_index()
+    total_spending=expenses['amount'].sum()
+    category_totals['percentage'] = (category_totals['sum'] / total_spending) * 100.round(2)
     
-    
-       
-     
-     
-     
+    top_categories=category_totals.sort_values(by='sum', ascending=False).head(5)
+    return {
+        "category_stats": category_totals.to_dict('records'),
+        "top_categories": top_categories.to_dict('records'),
+        "total_spending": total_spending
+    }
+def forecast_budget(df, )
      
      
     except Exception as e:
