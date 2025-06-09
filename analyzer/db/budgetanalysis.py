@@ -115,9 +115,55 @@ def forecast_budget(df, forecast_months=3):
     values_scaled=scaler.fit_transform(values.reshape(-1, 1))
     
     #create sequences
-    def create_sequences
+    def create_sequences(data,seq_length):
+        xs,xy=[],[]
+        for i in range (len(data)-seq_length):
+            x=data[i:i+seq_length]
+            y=data[i+seq_length]
+            xs.append(x)
+            xy.append(y)
+         return np.array(xs), np.array(xy)
      
      
+     seq_length=3
+     X,Y=create_sequences(values_scaled,seq_length)
+     
+     #convert to pytorch tensors
+     X_tensors=torch.tensor(X,dtype=torch.float32)
+     Y_tensors=torch.tensor(Y,dtype=torch.float32)
+     
+     
+     
+     #Create LTSM model
+     class LSTMForecaster(nn.Model):
+         def __init__(self,input_size,hidden_size=50,output_size=1):
+             super(), LSTMForecaster, self).__init__()
+             self.lstm=nn.LSTM(input_size,hidden_size,batch_first=True)
+             self.linear=nn.Linear(hidden_size,output_size)
+        def forward(self,x):
+            x,_=self.lstm(x)
+            x=self.linear(x[:,-1,:])
+            return x
+model=LSTMForecaster()
+creation=nn.MSELoss()
+optimizer=torch.optim.Adam(model.parameters(), lr=0.001)
+epochs=200
+
+for epoch in range(epochs):
+    model.train()
+    optimizer.zero_grad()
+    y_pred=model(X_tensor)
+    loss=criterion(y_pred, Y_tensor)
+    loss.backward()
+    optimizer.step()
+    
+model.eval()
+forecasts=[]
+    
+
+
+
+
     except Exception as e:
         print(f"Error fetching budget analysis data: {e}")
         return []
