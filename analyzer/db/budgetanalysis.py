@@ -29,36 +29,79 @@ def get_db_connection():
         print(f"Database connection error: {e}")
         raise Exception("Database connection error")
     
-def get_db_budget_analysis():
+def get_db_budget_analysis(user_id):
     try :
         conn=get_db_connection()
         cursor=conn.cursor()
         
         
         cursor.execute("""
-            SELECT 
-               id,user_id,title,amount,category,description,date,created_at,updated_at
-               FROM transactions
-               WHERE user_id=%s
-               FROM transactions
-               WHERE user_id=%s
-               ORDER BY date ASC
-               
-        """,(user_id,))
+         SELECT 
+         id,user_id,title,amount,category,created_at
+         FROM transactions
+        WHERE user_id=%s
+        ORDER BY created_at ASC
+""", (user_id,))
         transactions=cursor.fetchall()
         df=pd.DataFrame(transactions)
         if df.empty:
             return {"error": "No transactions found for the user."}
-        df['date'] = pd.to_datetime(df['date'])
+      
         
-        results = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return results
+        df['created_at'] = pd.to_datetime(df['created_at'])
+        df['month']=df['created_at'].dt.month
+        df['year']=df['created_at'].dt.year
+        df['month_year']=df['created_at'].dt.to_period('%Y-%m')
+        
+        monthly_category=df.pivot_table(
+            index='month_year',
+            columns='category', 
+            values='amount',
+            aggfunc=lamda x:np.sum([abs(val) for val in x if val <0])
+            
+        ).fillna(0)
+        analysis_results={
+            "raw_data":df.to_dict('records'),
+            "monthly_category":monthly_category.to_dict('records')
+            "spending_by_month": monthly_category.sum(axis=1).to_dict(),
+            "budget_forecasts":forecasts_budget(df),
+            "spending_trends":analyze_spending_trends(df),
+            "category_trends":analyze_category_trends(df)
+        }        
+        return analysis_results
+    
+    
+    expect Exception as e :
+        print(f"Error fetching budget analysis data: {e}")
+        return {error:"Error fetching budget analysis data"}
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+            
+            
+def analyze_spending_patterns(df):
+    expenses = df[df['amount'] < 0].copy()
+    expenses['amount'] = expenses['amount'].abs()
+    
+    category_totals=expense.groundby('category')['amount'].agg(['sum', 'mean', 'count']).reset_index()
+    
+    
+       
+     
+     
+     
+     
+     
     except Exception as e:
         print(f"Error fetching budget analysis data: {e}")
         return []
-
+    
+    
+     
+    
+    
 def test_connection():
     try:
         conn = get_db_connection()
@@ -74,6 +117,13 @@ def test_connection():
         return False
 
 # Add a main block to test
+# In your main block, add:
 if __name__ == "__main__":
     print("Testing database connection...")
-    test_connection()
+    if test_connection():
+        # Add a test user ID
+        test_user_id = "user_2xzv5Df6ctD6jlIyUvCVL9jv2wd"  # Replace with an actual user ID
+        print(f"Fetching data for user: {test_user_id}")
+        data = get_db_budget_analysis(test_user_id)
+        print("Data retrieved:")
+        print(data)  # Print the actual data
