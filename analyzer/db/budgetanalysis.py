@@ -95,7 +95,27 @@ def analyze_spending_patterns(df):
         "top_categories": top_categories.to_dict('records'),
         "total_spending": total_spending
     }
-def forecast_budget(df, )
+def forecast_budget(df, forecast_months=3):
+    if(len(df)<12):
+        print("Not enough data for forecasting. Need at least 12 months of data.")
+    expenses=df[df['amount']< 0].copy()
+    expenses['amount'] = expenses['amount'].abs()
+    monthly_expenses=expenses.groupby('month_year')['amount'].sum().reset_index()
+    
+    
+    #sortby date 
+    monthly_expenses['month_year'] = pd.to_datetime(monthly_expenses['month_year'].astype(str))
+    monthly_expense=monthly_expenses.sort_values('month_year')
+    
+    #preparing data for pytorch 
+    values=monthly_expenses['amount'].values,astype(float32)
+    if(len(values)<6):
+        return {error: "Not enough data for forecasting. Need at least 6 months of data."}
+    scaler=MinMaxScaler(feature_range=(0, 1))
+    values_scaled=scaler.fit_transform(values.reshape(-1, 1))
+    
+    #create sequences
+    def create_sequences
      
      
     except Exception as e:
