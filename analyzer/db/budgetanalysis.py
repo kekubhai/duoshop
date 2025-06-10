@@ -57,12 +57,11 @@ def get_db_budget_analysis(user_id):
             index='month_year',
             columns='category', 
             values='amount',
-            aggfunc=lamda x:np.sum([abs(val) for val in x if val <0])
-            
+            aggfunc=lambda x: np.sum(x) if x is not None else 0
         ).fillna(0)
         analysis_results={
             "raw_data":df.to_dict('records'),
-            "monthly_category":monthly_category.to_dict('records')
+            "monthly_category": monthly_category.to_dict('records'),
             "spending_by_month": monthly_category.sum(axis=1).to_dict(),
             "budget_forecasts":forecasts_budget(df),
             "spending_trends":analyze_spending_trends(df),
@@ -71,7 +70,7 @@ def get_db_budget_analysis(user_id):
         return analysis_results
     
     
-    expect Exception as e :
+    except Exception as e :
         print(f"Error fetching budget analysis data: {e}")
         return {error:"Error fetching budget analysis data"}
     finally:
@@ -87,8 +86,8 @@ def analyze_spending_patterns(df):
     
     category_totals=expense.groundby('category')['amount'].agg(['sum', 'mean', 'count']).reset_index()
     total_spending=expenses['amount'].sum()
-    category_totals['percentage'] = (category_totals['sum'] / total_spending) * 100.round(2)
-    
+    category_totals['percentage'] = (category_totals['sum'] / total_spending * 100).round(2)
+
     top_categories=category_totals.sort_values(by='sum', ascending=False).head(5)
     return {
         "category_stats": category_totals.to_dict('records'),
@@ -122,30 +121,30 @@ def forecast_budget(df, forecast_months=3):
             y=data[i+seq_length]
             xs.append(x)
             xy.append(y)
-         return np.array(xs), np.array(xy)
+            return np.array(xs), np.array(xy)
      
      
-     seq_length=3
-     X,Y=create_sequences(values_scaled,seq_length)
+    seq_length=3
+    X,Y=create_sequences(values_scaled,seq_length)
      
      #convert to pytorch tensors
-     X_tensors=torch.tensor(X,dtype=torch.float32)
-     Y_tensors=torch.tensor(Y,dtype=torch.float32)
+    X_tensors=torch.tensor(X,dtype=torch.float32)
+    Y_tensors=torch.tensor(Y,dtype=torch.float32)
      
      
      
-     #Create LTSM model
-     class LSTMForecaster(nn.Model):
-         def __init__(self,input_size,hidden_size=50,output_size=1):
-             super(), LSTMForecaster, self).__init__()
-             self.lstm=nn.LSTM(input_size,hidden_size,batch_first=True)
-             self.linear=nn.Linear(hidden_size,output_size)
+     #Create LSTM model
+    class LSTMForecaster(nn.Module):
+        def __init__(self,input_size,hidden_size=50,output_size=1):
+            super(LSTMForecaster, self).__init__()
+            self.lstm=nn.LSTM(input_size,hidden_size,batch_first=True)
+            self.linear=nn.Linear(hidden_size,output_size)
         def forward(self,x):
             x,_=self.lstm(x)
             x=self.linear(x[:,-1,:])
             return x
 model=LSTMForecaster()
-creation=nn.MSELoss()
+criterion=nn.MSELoss()
 optimizer=torch.optim.Adam(model.parameters(), lr=0.001)
 epochs=200
 
@@ -160,13 +159,23 @@ for epoch in range(epochs):
 model.eval()
 forecasts=[]
     
+#Use the last sequence as starting point
+current_seq=values_scaled[-seq_length:].reshape(1, seq_length, 1)
+current_seq_tensor=torch.tensor(current_seq, dtype=torch.float32)
+
+for  _ in range (forecast_months):
+    with torch.no_grad():
+        next_pred=model(current_seq_tensor).numpy
+        forecasts.append(next_pred[0, 0])
+        
+        #Update sequence for the next prediction
+        current_seq=values_scaled[-seq_length:].reshape(1, seq_length, 1)
+        current_seq_tensor=torch.tensor(current_seq,dtype=torch.float32)
+        print(current_seq_tensor.shape)
 
 
 
 
-    except Exception as e:
-        print(f"Error fetching budget analysis data: {e}")
-        return []
     
     
      
