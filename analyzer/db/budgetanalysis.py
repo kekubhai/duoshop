@@ -109,7 +109,7 @@ def forecast_budget(df, forecast_months=3):
     
     # Preparing data for pytorch 
     values = monthly_expenses['amount'].values.astype(np.float32)
-    if len(values) < 2:
+    if len(values) < 6:
         return {"error": "Not enough data for forecasting. Need at least 2 months of data."}
 
     scaler = MinMaxScaler(feature_range=(0, 1))
