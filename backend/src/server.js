@@ -3,8 +3,8 @@ import { configDotenv } from 'dotenv';
 import {sql} from './config/db.js'
 import transactionsRoute from './routes/transactionsRoute.js';
 import rateLimiter from './middleware/rateLimiter.js';
-const router=express.Router()
 
+import authRoutes from './routes/authRoutes.js';
 const app=express();
 configDotenv();
 //app.use(rateLimiter)
@@ -23,6 +23,16 @@ async function initDB() {
                 created_at TIMESTAMP DEFAULT CURRENT_DATE
             )
         `;
+           await sql`
+            CREATE TABLE IF NOT EXISTS users(
+                id VARCHAR(255) PRIMARY KEY,
+                name VARCHAR(255),
+                email VARCHAR(255) UNIQUE,
+                profile_image VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_DATE
+            )
+        `;
+        
         console.log("Database initialised succesfully");
     } catch (error) {
         console.error("Error initializing database:", error);
@@ -33,10 +43,11 @@ app.get("/", (req, res) => {
     res.send("Welcome to the Expense Tracker API");
 });
 app.use("/api/transactions", transactionsRoute)
-
-console.log(`Server is running at port ${process.env.BASE_URL || 5001}`)
+app.use("/api/auth", authRoutes)
+console.log(`Server is running at port ${ 5001}`)
  initDB().then (()=>{
     app.listen(process.env.BASE || 5001, ()=>{
         console.log(`Server is running at port ${process.env.BASE_URL|| 5001}`)
+
     }  )
  })
