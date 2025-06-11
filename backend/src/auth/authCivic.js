@@ -4,12 +4,12 @@ import express from 'express';
 const router=express.Router();
 
 router.get('/auth/login', async (req, res) => {
-  const url = await req.CivicAuth.buildLoginUrl();
+  const url = await req.civicAuth.buildLoginUrl();
   res.redirect(url.toString());
 });
 
 router.get('/auth/logout', async (req, res) => {
-  const url = await req.CivicAuth.buildLogoutRedirectUrl();
+  const url = await req.civicAuth.buildLogoutRedirectUrl();
   res.redirect(url.toString());
 });
 router.get('/auth/callback', async (req, res) => {
@@ -17,7 +17,7 @@ router.get('/auth/callback', async (req, res) => {
   await req.civicAuth.resolveOAuthAccessCode(code, state);
 
   // ✅ Fetch the verified user from Civic
-  const civicUser = await req.CivicAuth.getUser();
+  const civicUser = await req.civicAuth.getUser();
 
   // 🛠 Upsert into Prisma
   const dbUser = await prisma.user.upsert({
