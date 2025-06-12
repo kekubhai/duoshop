@@ -25,6 +25,7 @@
     },
     "plugins": [
       "expo-router",
+      "@prisma/react-native",
       [
         "expo-splash-screen",
         {

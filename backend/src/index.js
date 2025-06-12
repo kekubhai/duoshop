@@ -15,10 +15,9 @@ app.use(cookieParser());
 
 // Configure Civic Auth
 const config = {
-
   clientId: process.env.CLIENT_ID,
   redirectUrl: process.env.CIVIC_REDIRECT_URL,
-  postLogoutRedirectUrl: process.env.CIVIC_POST_LOGOUT_REDIRECT_URL  // ✅ Correct
+  postLogoutRedirectUrl: process.env.CIVIC_POST_LOGOUT_REDIRECT_URL
 };
 
 // Cookie storage implementation
@@ -72,7 +71,6 @@ app.use((req, res, next) => {
 app.get('/auth/login', async (req, res) => {
   try {
     const url = await req.civicAuth.buildLoginUrl({
-      redirectUrl: `${process.env.BASE_URL}/auth/callback`,
       scope: ['openid', 'email', 'profile']
     });
     console.log('Login URL:', url.toString());
@@ -139,6 +137,16 @@ const requireAuth = async (req, res, next) => {
 app.get('/dashboard', requireAuth, async (req, res) => {
   const user = await req.civicAuth.getUser();
   res.send(`Hello, ${user?.name || 'User'}!`);
+});
+
+// Add this to your server code
+app.get('/debug-env', (req, res) => {
+  res.json({
+    clientId: process.env.CLIENT_ID ? '✓ Set' : '✗ Missing',
+    redirectUrl: process.env.CIVIC_REDIRECT_URL || 'Missing',
+    postLogoutRedirectUrl: process.env.CIVIC_POST_LOGOUT_REDIRECT_URL || 'Missing',
+    baseUrl: process.env.BASE_URL || 'Missing'
+  });
 });
 
 app.listen(PORT, () => {
