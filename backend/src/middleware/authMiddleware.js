@@ -2,8 +2,7 @@ import express from 'express';
 import { CivicAuth, CookieStorage } from '@civic/auth/server';
 import cookieParser from 'cookie-parser';
 
-const app = express();
-app.use(cookieParser());
+
 
 // Configuration object
 const config = {
