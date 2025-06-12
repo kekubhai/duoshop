@@ -14,7 +14,7 @@
   "dependencies": {
     "@clerk/clerk-expo": "^2.12.0",
     "@expo/vector-icons": "^14.1.0",
-  
+    "@prisma/client": "^5.22.0",
     "@react-native-vector-icons/ionicons": "^12.0.0",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
@@ -24,7 +24,7 @@
     "@solana/web3.js": "^1.98.2",
     "ajv": "^8.17.1",
     "buffer": "^6.0.3",
-    "expo": "~53.0.9",
+    "expo": "~52.0.9",
     "expo-auth-session": "~6.1.5",
     "expo-blur": "~14.1.4",
     "expo-constants": "~17.1.6",
@@ -66,7 +66,6 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.1",
     "prettier": "^3.5.3",
-    "prisma": "^5.22.0",
     "typescript": "~5.8.3"
   },
   "private": true
